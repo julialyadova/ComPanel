@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="ComPanel.Resources.Controls.DataFlowPair"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ComPanel.Resources.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="200">
+
+    <Grid Margin="0,3,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0" x:Name="SentTextBlock" d:Text="Sent" 
+                       Padding="3,0,3,0"
+                       TextWrapping="Wrap"
+                       Background="WhiteSmoke"/>
+        <TextBlock Grid.Column="1" x:Name="RecievedTextBlock" d:Text="Recieved"
+                       Padding="3,0,3,0"
+                       TextWrapping="Wrap"
+                       Background="Gainsboro"/>
+    </Grid>
+</UserControl>

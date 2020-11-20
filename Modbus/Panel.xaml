@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="Modbus.Panel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Modbus"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="400"
+             d:Background="White">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="100px" MaxWidth="160px"/>
+            <ColumnDefinition MinWidth="100px"/>
+        </Grid.ColumnDefinitions>
+        
+        <!--OPTIONS-->
+        <StackPanel Grid.Column="0">
+            <GroupBox Header="Data Type">
+                <ComboBox x:Name="DataTypeComboBox"/>
+            </GroupBox>
+            <GroupBox Header="Data Format">
+                <ComboBox x:Name="DataFormatComboBox"/>
+            </GroupBox>
+            <GroupBox Header="Start Register">
+                <TextBox x:Name="StartRegisterTextBox"/>
+            </GroupBox>
+            <GroupBox Header="Length">
+                <TextBox x:Name="LengthTextBox"/>
+            </GroupBox>
+            <Button x:Name="SendButton" Content="Send" Margin="0,10,0,0"/>
+        </StackPanel>
+
+        <!--DATA-->
+        <Grid Grid.Column="1" Margin="5,0,5,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="26px"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" MinWidth="40px" MaxWidth="80px"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--REGISTERS TABLE LABELS-->
+            <Label Grid.Row="0" Grid.Column="0" Content="REG"
+                   HorizontalAlignment="Center"/>
+            <Label Grid.Row="0" Grid.Column="1" Content="VALUE"
+                   HorizontalAlignment="Center"/>
+            
+            <!--REGISTERS COLUMN-->
+            <StackPanel x:Name="RegistersStackPanel"/>
+
+            <!--VALUES COLUMN-->
+            <StackPanel x:Name="ValuesStackPanel"/>
+        </Grid>
+    </Grid>
+</UserControl>

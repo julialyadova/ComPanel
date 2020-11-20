@@ -1,0 +1,124 @@
+﻿<Window x:Class="ComPanel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ComPanel" xmlns:resources="clr-namespace:ComPanel.Resources.Controls"
+        mc:Ignorable="d"
+        Title="Com Panel" 
+        Height="450" Width="800" MinHeight="300" MinWidth="600"
+        WindowStartupLocation="CenterScreen"
+        FontSize="14px">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30px"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!--TOP BAR-->
+        <Grid x:Name="TopBarGrid" Grid.Row="0" Background="#FF122E41">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" MinWidth="150" MaxWidth="200"/>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="30px"/>
+            </Grid.ColumnDefinitions>
+
+            <!--APP NAME-->
+            <Label x:Name="AppNameLabel" Grid.Column="0" Content="ComPanel v0.1" FontWeight="Bold" Foreground="White"/>
+
+            <!--SPACE FOR MMODULES-->
+            <resources:ModulesMenu x:Name="ModulesMenu" Grid.Column="1"/>
+
+            <!--SETTINGS-->
+            <Button x:Name="Settings" Grid.Column="2" Content="..."
+                    Margin="2,2,2,2" BorderThickness="0" Background="Gainsboro"/>
+        </Grid>
+
+        <!--CONTENT-->
+        <Grid Grid.Row="1" Background="White" Margin="4,0,4,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" MinWidth="150" MaxWidth="200"/>
+                <ColumnDefinition Width="5*" MinWidth="200"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5*" MinWidth="200"/>
+            </Grid.ColumnDefinitions>
+
+            <!--SETTINGS PANEL-->
+            <Grid Grid.Column="0" Margin="0,0,10,0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="50px"/>
+                </Grid.RowDefinitions>
+
+                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="OptionsStackPanel">
+                        <GroupBox Header="Port">
+                            <ComboBox x:Name="PortComboBox" IsEditable="True" >
+                            </ComboBox>
+                        </GroupBox>
+                        <GroupBox Header="BaudRate">
+                            <ComboBox x:Name="BaudRateComboBox" IsEditable="True"/>
+                        </GroupBox>
+                        <GroupBox Header="Parity">
+                            <ComboBox x:Name="ParityComboBox"/>
+                        </GroupBox>
+                        <GroupBox Header="DataBits">
+                            <ComboBox x:Name="DataBitsComboBox" IsEditable="True"/>
+                        </GroupBox>
+                        <GroupBox Header="StopBits">
+                            <ComboBox x:Name="StopBitsComboBox"/>
+                        </GroupBox>
+                        <GroupBox Header="TimeOut - ms">
+                            <ComboBox x:Name="TimeOutMSComboBox" IsEditable="True"/>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!--CONNECTION BUTTONS-->
+                <Button x:Name="ConnectButton" Grid.Row="1" Margin="0,10,0,10"
+                        Content="Connect"
+                        Click="ConnectButton_Click"/>
+            </Grid>
+
+
+            <!--CONTROLS PANEL-->
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="ContentStackPanel">
+                </StackPanel>
+            </ScrollViewer>
+
+            <!--SPLITTER-->
+            <GridSplitter Grid.Column="2" ShowsPreview="False" Width="4"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch" />
+
+            <!--REQUEST-RESPONSE PANEL-->
+            <ScrollViewer Grid.Column="3" VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30px"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <!--LABELS SENT AND RECIEVED UNDER DATA FLOW PANEL-->
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0" Content="SENT" HorizontalAlignment="Center"/>
+                        <Label Grid.Column="1" Content="RECIEVED" HorizontalAlignment="Center"/>
+                    </Grid>
+
+                    <!--DATA FLOW PANEL-->
+                    <StackPanel Grid.Row="1" x:Name="DataFlowPanel"
+                                Background="White">
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,10 @@
+﻿<Application x:Class="ComPanel.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ComPanel">
+    <Application.Resources>
+        <Color x:Key="ShadowedColor" ScR="220" ScG="220" ScB="220" ScA="255" />
+        <SolidColorBrush x:Key="BackgroundColorBrush" Color="White" />
+        <SolidColorBrush x:Key="ShadowedColorBrush" Color="{StaticResource ShadowedColor}" />
+    </Application.Resources>
+</Application>
