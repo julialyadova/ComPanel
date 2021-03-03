@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace ComPanel.Test
 {
-    class TestConnection : ComPanel.Connection.Connection
+    class TestConnection
     {
         public Action<string> LogError { get; set; }
         public Action<byte[], int> OnDataRecieved { get; set; }
@@ -17,14 +17,14 @@ namespace ComPanel.Test
             OnDataRecieved?.Invoke(_testRecievedData, _testRecievedData.Length);
         }
 
-        public void Start()
+        public void Connect()
         {
             if (_started)
                 throw new Exception("TestConnection.Start() : Connection was already started");
             _started = true;
         }
 
-        public void Stop()
+        public void Disonnect()
         {
             if (!_started)
                 throw new Exception("TestConnection.Stop() : Connection was not started");

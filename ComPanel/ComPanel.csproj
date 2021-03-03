@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Version>0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,12 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FlatWindow" Version="1.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.IO.Ports" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Modules\Modbus.dll">
+    <None Update="ModulesLibs\Modbus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

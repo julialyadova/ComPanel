@@ -5,128 +5,91 @@ namespace ComPanel.DataFlow
 {
     class DataFlowController
     {
-        public Action<byte[], int> OnEventuallyDataRecieved;
-        public Action<byte[], int> OnDataRecieved { get; }
+        public Action<byte[], int> OnUnexpectedDataRecieved;
 
 
         private const int waitingMS = 50;
         private const int pauseMaxTimeMS = 500;
+        private const int waitingLimit = 8;
 
         private Action<byte[], int> _send;
-        private Action<byte[], int> _onDataRecieved;
+        private Action<byte[], int> _OnExpectedDataRecieved;
 
-        private bool _sending;
-        private bool _pause;
+        private bool _sending;        
+        private int _waitingCount;
+
+        private bool _expectingData;
         private int _responseCount;
         private readonly object _lockObject;
-
-        private byte[] _timerData;
-        private int _timerTimeOutMS = 500;
-        private Thread timerThread;
+        private Thread pauseLockMonitor;
 
         public DataFlowController(Action<byte[], int> send)
         {
             if (send == null)
                 throw new ArgumentNullException("send", "send method must be not null. Unable to send Data.");
 
+            _send = send;
+
+            _sending = true;
+            _waitingCount = 0;
+
+            _expectingData = false;
             _responseCount = 0;
             _lockObject = new object();
-            _sending = true;
-            _pause = false;
 
-            _send = send;
-            OnDataRecieved += (data, length) =>
-                {
-                    if (_pause)
-                    {
-                        _onDataRecieved?.Invoke(data, length);
-                        _pause = false;
-                        _onDataRecieved = null;
-                    }
-                    else
-                    {
-                        OnEventuallyDataRecieved?.Invoke(data, length);
-                    }                    
-                };
+            pauseLockMonitor = new Thread(MonitorPauseLock);
+            pauseLockMonitor.IsBackground = true;
+            pauseLockMonitor.Start();
         }
 
-        public void StartTimerSending(byte[] data, int timeOutMS, Action<byte[], int> onDataRecieved)
+        public void Start()
         {
-            _timerData = data;
-            _timerTimeOutMS = timeOutMS;
-            _onDataRecieved = onDataRecieved;
-
-            if (timerThread == null)
-            {
-                _sending = true;
-
-                var checkPauseLocksThread = new Thread(MonitorPauseLock);
-                checkPauseLocksThread.IsBackground = true;
-                checkPauseLocksThread.Start();
-
-                timerThread = new Thread(SendOnTimerThread);
-                timerThread.IsBackground = true;
-                timerThread.Start();
-            }                
+            _sending = true;
         }
 
-        public void StopTimerSending()
+        public void Pause()
         {
             _sending = false;
-            timerThread = null;
+            _OnExpectedDataRecieved = null;
+            _expectingData = false;
         }
 
         public void Send(byte[] data, int length, Action<byte[], int> onDataRecieved = null)
         {
+            //sending is available and not ot many requests at one time
+            if (!_sending || _waitingCount == waitingLimit)
+                return;
+
+            //waiting for another messages to send and recieve answers
+            _waitingCount++;
             while (!TryPause())
-                Thread.Sleep(waitingMS);
-
-            _send(data, length);
-            if (onDataRecieved != null)
             {
-                var rememberedAction = _onDataRecieved;
-                _onDataRecieved = (data, length) =>
-                {
-                    onDataRecieved(data, length);
-                    _onDataRecieved = rememberedAction;
-                };
-            }
-        }
-
-        private void SendOnTimerThread()
-        {
-            while (_sending)
-            {
-                if (!TryPause())
-                {
+                if (_sending)
                     Thread.Sleep(waitingMS);
-                    continue;
-                }
-
-                if (_timerData != null)
-                {
-                    _send(_timerData, _timerData.Length);
-                }
-                Thread.Sleep(_timerTimeOutMS);
+                else
+                    return;
             }
+
+            //no sense to wait if not expecting data
+            if (onDataRecieved == null)
+                _expectingData = false;
+            else
+                _OnExpectedDataRecieved = onDataRecieved;
+            _send(data, length);
+            //stops waiting
+            _waitingCount--;
         }
 
-        private void MonitorPauseLock()
+        public void RecieveData(byte[] data, int length)
         {
-            var lastResponseIndex = _responseCount;
-            while (_sending)
+            if (_expectingData)
             {
-                Thread.Sleep(pauseMaxTimeMS);
-                lock (_lockObject)
-                {
-                    if (_pause)
-                    {
-                        if (_responseCount == lastResponseIndex)
-                            _pause = false;
-                        else
-                            lastResponseIndex = _responseCount;
-                    }
-                }
+                _OnExpectedDataRecieved?.Invoke(data, length);
+                _expectingData = false;
+            }
+            else
+            {
+                OnUnexpectedDataRecieved?.Invoke(data, length);
             }
         }
 
@@ -134,16 +97,35 @@ namespace ComPanel.DataFlow
         {
             lock (_lockObject)
             {
-                if (_pause)
-                {
+                if (_expectingData)
                     return false;
-                }
+
                 if (_responseCount == int.MaxValue)
                     _responseCount = 0;
                 else
                     _responseCount++;
-                _pause = true;
+
+                _expectingData = true;
                 return true;
+            }
+        }
+
+        private void MonitorPauseLock()
+        {
+            var lastResponseIndex = _responseCount;
+            while (true)
+            {
+                Thread.Sleep(pauseMaxTimeMS);
+                lock (_lockObject)
+                {
+                    if (_expectingData)
+                    {
+                        if (_responseCount == lastResponseIndex)
+                            _expectingData = false;
+                        else
+                            lastResponseIndex = _responseCount;
+                    }
+                }
             }
         }
     }

@@ -4,6 +4,7 @@ using System;
 
 namespace ComPanel.Connection
 {
+    [Serializable]
     public class PortSettings
     {
         public string PortName = "COM1";

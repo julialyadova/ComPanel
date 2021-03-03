@@ -6,13 +6,14 @@
         xmlns:local="clr-namespace:ComPanel" xmlns:resources="clr-namespace:ComPanel.Resources.Controls"
         mc:Ignorable="d"
         Title="Com Panel" 
+        AllowsTransparency="True" WindowStyle="None"
         Height="450" Width="800" MinHeight="300" MinWidth="600"
         WindowStartupLocation="CenterScreen"
         FontSize="14px">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30px"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -39,9 +40,9 @@
         <Grid Grid.Row="1" Background="White" Margin="4,0,4,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" MinWidth="150" MaxWidth="200"/>
-                <ColumnDefinition Width="5*" MinWidth="200"/>
+                <ColumnDefinition Width="5*" MinWidth="250"/>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5*" MinWidth="200"/>
+                <ColumnDefinition Width="5*" MinWidth="150"/>
             </Grid.ColumnDefinitions>
 
             <!--SETTINGS PANEL-->

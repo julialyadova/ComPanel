@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
 
-namespace ComPanel.ModulesLoader
+namespace ComPanel.Modules
 {
     class ModuleLoadContext : AssemblyLoadContext
     {

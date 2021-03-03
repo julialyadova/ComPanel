@@ -1,5 +1,6 @@
 ﻿using ComPanel.Resources;
 using ComPanel.Resources.Controls;
+using System;
 using System.Windows;
 
 //TODO
@@ -13,6 +14,8 @@ namespace ComPanel
     /// </summary>
     public partial class MainWindow : Window
     {
+        public Action ConnectClick;
+        public Action DisconnectClick;
         public MainWindow()
         {
             InitializeComponent();
@@ -32,9 +35,11 @@ namespace ComPanel
             {
                 ConnectButton.Content = "Disconnect";
                 OptionsStackPanel.IsEnabled = false;
+                ConnectClick?.Invoke();
             }
             else
             {
+                DisconnectClick?.Invoke();
                 ConnectButton.Content = "Connect";
                 OptionsStackPanel.IsEnabled = true;
             }

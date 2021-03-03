@@ -12,7 +12,7 @@
             <ColumnDefinition MinWidth="100px" MaxWidth="160px"/>
             <ColumnDefinition MinWidth="100px"/>
         </Grid.ColumnDefinitions>
-        
+
         <!--OPTIONS-->
         <StackPanel Grid.Column="0">
             <GroupBox Header="Data Type">
@@ -21,11 +21,17 @@
             <GroupBox Header="Data Format">
                 <ComboBox x:Name="DataFormatComboBox"/>
             </GroupBox>
+            <GroupBox Header="Scan Rate (ms)">
+                <TextBox x:Name="ScanRateTextBox" TextChanged="TextBox_TextChanged"/>
+            </GroupBox>
+            <GroupBox Header="Address">
+                <TextBox x:Name="AddressTextBox" TextChanged="TextBox_TextChanged"/>
+            </GroupBox>
             <GroupBox Header="Start Register">
-                <TextBox x:Name="StartRegisterTextBox"/>
+                <TextBox x:Name="StartRegisterTextBox" TextChanged="TextBox_TextChanged"/>
             </GroupBox>
             <GroupBox Header="Length">
-                <TextBox x:Name="LengthTextBox"/>
+                <TextBox x:Name="LengthTextBox" TextChanged="TextBox_TextChanged"/>
             </GroupBox>
             <Button x:Name="SendButton" Content="Send" Margin="0,10,0,0"/>
         </StackPanel>
@@ -46,7 +52,7 @@
                    HorizontalAlignment="Center"/>
             <Label Grid.Row="0" Grid.Column="1" Content="VALUE"
                    HorizontalAlignment="Center"/>
-            
+
             <!--REGISTERS COLUMN-->
             <StackPanel x:Name="RegistersStackPanel"/>
 

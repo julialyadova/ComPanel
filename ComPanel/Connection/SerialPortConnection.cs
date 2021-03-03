@@ -3,26 +3,13 @@ using System.IO.Ports;
 
 namespace ComPanel.Connection
 {
-    class SerialPortConnection : Connection
+    class SerialPortConnection
     {
         private SerialPort _port;
         private byte[] _buffer;
 
         public Action<string> LogError { get; set; }
         public Action<byte[], int> OnDataRecieved { get; set; }
-
-        public SerialPortConnection(PortSettings portSettings)
-        {
-            _port = new SerialPort(
-                portName: portSettings.PortName,
-                baudRate: portSettings.BaudRate,
-                parity: portSettings.Parity,
-                dataBits: portSettings.DataBits,
-                stopBits: portSettings.StopBits);
-            _port.ReadTimeout = portSettings.TimeOutMS;
-            _port.WriteTimeout = portSettings.TimeOutMS;
-            _buffer = new byte[_port.ReadBufferSize];
-        }
 
         private bool TryOpenPort()
         {
@@ -38,23 +25,36 @@ namespace ComPanel.Connection
             return true;
         }
 
-        public void Start()
+        public void Connect(PortSettings portSettings)
         {
+            _port = new SerialPort
+            (
+                portName:   portSettings.PortName,
+                baudRate:   portSettings.BaudRate,
+                parity:     portSettings.Parity,
+                dataBits:   portSettings.DataBits,
+                stopBits:   portSettings.StopBits
+            );
+
+            _port.ReadTimeout = portSettings.TimeOutMS;
+            _port.WriteTimeout = portSettings.TimeOutMS;
+
+            _buffer = new byte[_port.ReadBufferSize];
+
             if (!TryOpenPort())
                 return;
 
-            if (OnDataRecieved != null)
-                _port.DataReceived += DataRecievedEventHandler;
+            _port.DataReceived += DataRecievedEventHandler;
         }
 
-        public void Stop()
+        public void Disonnect()
         {
             _port.Close();
         }
 
         public void Send(byte[] buffer, int length)
         {
-            if (_port.IsOpen)
+            if (_port != null && _port.IsOpen)
                 _port.Write(buffer, 0, length);
         }
 
@@ -62,7 +62,7 @@ namespace ComPanel.Connection
         {
             var length = _port.BytesToRead;
             _port.Read(_buffer, 0, length);
-            OnDataRecieved(_buffer, length);
+            OnDataRecieved?.Invoke(_buffer, length);
         }
     }
 }
